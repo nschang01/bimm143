@@ -4,7 +4,7 @@ author: "nicole chang"
 date: 2023-04-19
 format: gfm
 editor_options: 
-  chunk_output_type: console
+  chunk_output_type: inline
 ---
 
 **Q1.** For which phases is data visualization important in our scientific workflows?
