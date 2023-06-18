@@ -1,0 +1,19 @@
+---
+title: "Class 11: Genomics"
+author: Nicole Chang
+format: gfm
+---
+
+# Q5 Proportion of MXL with G\|G genotype
+
+```{r}
+mxl <- read.csv('373531-SampleGenotypes-Homo_sapiens_Variation_Sample_rs8067378.csv')
+head(mxl)
+View(mxl)
+```
+
+How many G\|G genotypes I have
+
+```{r}
+table(mxl$Genotype..forward.strand.) / nrow(mxl)
+```
