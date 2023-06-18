@@ -1,0 +1,138 @@
+---
+title: "Class 9"
+author: Nicole Chang
+format: gfm
+date: 2023-05-03
+editor_options:
+execute: 
+  chunk_output_type: inline
+---
+
+# 1. Introduction to the RCSB Protein Data Bank (PDB)
+
+## PDB statistics
+
+To read the file we are going to use the command `read.csv`.
+
+```{r}
+pdb_stats <- read.csv('Data Export Summary.csv', row.names = 1)
+View(pdb_stats)
+```
+
+I need to sum all the elements of the X.ray column.
+
+```{r}
+pdb_stats$X.ray
+```
+
+We are gonna use `gsub` to remove the commas
+
+```{r}
+xray_without_commas <- gsub(',', '', pdb_stats$X.ray)
+as.numeric( xray_without_commas )
+```
+
+I use the `sum` command to get the sum
+
+```{r}
+n_xray <- sum( as.numeric( xray_without_commas ) )
+n_em <- sum( as.numeric( gsub(',', '', pdb_stats$EM) ) )
+n_total <- sum( as.numeric( gsub(',', '', pdb_stats$Total) ) ) 
+```
+
+Q1. What percentage of structures in the PDB are solved by X-Ray and Electron Microscopy?
+
+```{r}
+p_xray <- (n_xray) / n_total
+p_em <- (n_em) / n_total
+p_xray
+p_em
+p_total <- (p_xray + p_em) *100
+p_total
+```
+
+Q2. What proportion of structures in the PDB are protein?
+
+```{r}
+total_protein <- as.numeric( gsub(',', '', pdb_stats[1, 7]) )
+```
+
+Proportion
+
+```{r}
+total_protein/n_total
+```
+
+Q3. Type HIV in the PDB website search box on the home page and determine how many HIV-1 protease structures are in the current PDB?
+
+Too difficult to determine.
+
+# 2. Visualizing the HIV-1 protease structure
+
+## Using Mol\*
+
+![](1HSG.png)
+
+## The important role of water
+
+Q4. Water molecules normally have 3 atoms. Why do we see just one atom per water molecule in this structure?
+
+Including the hydrogens would make the image too cluttered and not show the interaction.
+
+Q5. There is a critical "conserved" water molecule in the binding site. Can you identify this water molecule? What residue number does this water molecule have?
+
+308
+
+Q6. Generate and save a figure clearly showing the two distinct chains of HIV-protease along with the ligand. You might also consider showing the catalytic residues ASP 25 in each chain and the critical water. Add this figure to your Quarto document.
+
+![](1HSG308.png)
+
+# 3. Introduction to Bio3D in R
+
+```{r}
+library(bio3d)
+pdb <- read.pdb("1HSG")
+pdb
+```
+
+Q7. How many amino acid residues are there in this pdb object?
+
+198
+
+Q8. Name one of the two non-protein residues?
+
+HOH
+
+Q9. How many protein chains are in this structure?
+
+2
+
+```{r}
+attributes(pdb)
+```
+
+```{r}
+head(pdb$atom)
+```
+
+## Predicting functional motions of a single structure by NMA
+
+```{r}
+adk <- read.pdb('6s36')
+```
+
+```{r}
+adk
+```
+
+```{r}
+m <- nma(adk)
+```
+
+```{r}
+plot(m)
+```
+
+```{r}
+mktrj(m, file="adk_m7.pdb")
+```
